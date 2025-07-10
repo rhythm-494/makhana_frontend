@@ -786,7 +786,7 @@ const HomePage = () => {
                     >
                       {product.image ? (
                         <motion.img 
-                          src={`http://localhost/makhana_backend/uploads/${product.image}`}
+                          src={`https://makhana-nodebackend.onrender.com/uploads/${product.image}`}
                           alt={product.name}
                           initial={{ opacity: 0 }}
                           animate={{ opacity: 1 }}
