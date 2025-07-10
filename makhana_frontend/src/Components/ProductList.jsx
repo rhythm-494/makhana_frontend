@@ -446,7 +446,7 @@ const handleAddToCart = async (product, event) => {
                     <div className="ecom-product-image">
                       {product.image ? (
                         <img 
-                          src={`http://localhost/makhana_backend/${product.image}`}
+                          src={`https://makhana-nodebackend.onrender.com/${product.image}`}
                           alt={product.name}
                           
                           className="ecom-product-img"
