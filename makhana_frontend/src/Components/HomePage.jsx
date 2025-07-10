@@ -794,9 +794,7 @@ const HomePage = () => {
                           whileHover={{
                             filter: "brightness(1.05)"
                           }}
-                          onError={(e) => {
-                            e.target.src = '/images/placeholder-makhana.jpg';
-                          }}
+            
                         />
                       ) : (
                         <motion.div 
