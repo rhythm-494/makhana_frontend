@@ -165,9 +165,6 @@ const Navbar = () => {
     }
   }, [currentUser, user]);
 
-  // REMOVED: Aggressive 3-second interval session checking
-  // This was causing the session expiration issue
-  
   // Optional: Less frequent session validation (every 5 minutes)
   useEffect(() => {
     const interval = setInterval(async () => {
@@ -187,7 +184,7 @@ const Navbar = () => {
           console.error('Periodic session check error:', error);
         }
       }
-    }, 300000); // Check every 5 minutes instead of 3 seconds
+    }, 300000); // Check every 5 minutes
 
     return () => clearInterval(interval);
   }, [isAuthenticated, user, refreshUserCart]);
@@ -374,7 +371,7 @@ const Navbar = () => {
               >
                 <span className="login-icon">🔐</span>
                 <span>Login</span>
-              </motion.button>
+              </button>
             )}
           </div>
 
