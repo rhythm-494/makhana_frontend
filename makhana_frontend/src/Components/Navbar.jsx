@@ -97,7 +97,7 @@ const Navbar = () => {
     try {
       setLoading(true);
       const response = await authService.checkSession();
-      
+      console.log("response",response);
       if (response.status === 1 && response.logged_in) {
         setUser(response.user);
         setIsAuthenticated(true);
