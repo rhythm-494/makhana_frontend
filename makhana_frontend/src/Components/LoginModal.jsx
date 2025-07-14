@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { authService } from '../services/authService.jsx';
 import './LoginModal.css';
 
-const LoginModal = ({ isOpen, onClose }) => {
+const LoginModal = ({ isOpen, onClose, onLoginSuccess }) => {
   const [isLogin, setIsLogin] = useState(true);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState({ text: '', type: '' });
@@ -56,12 +56,12 @@ const LoginModal = ({ isOpen, onClose }) => {
 
       if (response.status === 1) {
         setMessage({ text: response.message, type: 'success' });
-        
         setTimeout(() => {
+          if (onLoginSuccess) onLoginSuccess(); // <-- Add this line
           onClose();
           resetForm();
         }, 1500);
-      } else {
+      }else {
         setMessage({ text: response.message, type: 'error' });
       }
     } catch (error) {
