@@ -97,11 +97,11 @@ const Navbar = () => {
     try {
       setLoading(true);
       const response = await authService.checkSession();
-      console.log("response",response);
+      console.log("Session check response:", response);
+      
       if (response.status === 1 && response.logged_in) {
         setUser(response.user);
         setIsAuthenticated(true);
-        
         await refreshUserCart();
       } else {
         setUser(null);
@@ -118,8 +118,11 @@ const Navbar = () => {
 
   const handleLoginSuccess = async () => {
     console.log('Login successful, refreshing session and cart...');
-    await checkUserSession();
-    closeLoginModal();
+    // Add delay to ensure backend session is properly set
+    setTimeout(async () => {
+      await checkUserSession();
+      closeLoginModal();
+    }, 1000);
   };
 
   useEffect(() => {
@@ -144,10 +147,12 @@ const Navbar = () => {
     return () => document.removeEventListener('keydown', handleKeyDown);
   }, [isMenuOpen, showUserDropdown]);
 
+  // Initial session check on component mount
   useEffect(() => {
     checkUserSession();
   }, []);
 
+  // Sync with cart context user (only if different)
   useEffect(() => {
     if (currentUser && (!user || user.id !== currentUser.id)) {
       console.log('Cart user changed, updating navbar user:', currentUser);
@@ -160,28 +165,32 @@ const Navbar = () => {
     }
   }, [currentUser, user]);
 
+  // REMOVED: Aggressive 3-second interval session checking
+  // This was causing the session expiration issue
+  
+  // Optional: Less frequent session validation (every 5 minutes)
   useEffect(() => {
     const interval = setInterval(async () => {
-      try {
-        const response = await authService.checkSession();
-        const isLoggedIn = response.status === 1 && response.logged_in;
-        
-        if (isLoggedIn && (!user || user.id !== response.user.id)) {
-          setUser(response.user);
-          setIsAuthenticated(true);
-          await refreshUserCart();
-        } else if (!isLoggedIn && user) {
-          setUser(null);
-          setIsAuthenticated(false);
-          await refreshUserCart();
+      // Only check if user is authenticated to avoid unnecessary calls
+      if (isAuthenticated) {
+        try {
+          const response = await authService.checkSession();
+          const isLoggedIn = response.status === 1 && response.logged_in;
+          
+          if (!isLoggedIn && user) {
+            console.log('Session expired, logging out user');
+            setUser(null);
+            setIsAuthenticated(false);
+            await refreshUserCart();
+          }
+        } catch (error) {
+          console.error('Periodic session check error:', error);
         }
-      } catch (error) {
-        console.error('Periodic session check error:', error);
       }
-    }, 3000); 
+    }, 300000); // Check every 5 minutes instead of 3 seconds
 
     return () => clearInterval(interval);
-  }, [user, refreshUserCart]);
+  }, [isAuthenticated, user, refreshUserCart]);
 
   const navItems = [
     { path: '/', label: 'Home', icon: '🏠' },
