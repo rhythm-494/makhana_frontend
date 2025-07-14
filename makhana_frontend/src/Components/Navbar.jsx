@@ -122,7 +122,7 @@ const Navbar = () => {
     setTimeout(async () => {
       await checkUserSession();
       closeLoginModal();
-    }, 1000);
+    }, 1500);
   };
 
   useEffect(() => {
@@ -184,7 +184,7 @@ const Navbar = () => {
           console.error('Periodic session check error:', error);
         }
       }
-    }, 300000); // Check every 5 minutes
+    }, 300000); // Check every 5 minutes instead of 3 seconds
 
     return () => clearInterval(interval);
   }, [isAuthenticated, user, refreshUserCart]);
@@ -247,6 +247,7 @@ const Navbar = () => {
             </form>
           </div>
 
+          {/* Navigation Menu */}
           <ul className={`nav-menu ${isMenuOpen ? 'active' : ''}`}>
             <AnimatePresence>
               {navItems.map((item, index) => (
@@ -270,7 +271,9 @@ const Navbar = () => {
             </AnimatePresence>
           </ul>
 
+          {/* Navigation Actions */}
           <div className="nav-actions">
+            {/* Cart Icon */}
             <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
               <Link to="/cart" className="cart-icon" onClick={closeMenu}>
                 <span className="cart-emoji">🛒</span>
@@ -289,6 +292,8 @@ const Navbar = () => {
                 </AnimatePresence>
               </Link>
             </motion.div>
+
+            {/* Authentication Section */}
             {loading ? (
               <div className="auth-loading">
                 <motion.div 
@@ -371,7 +376,7 @@ const Navbar = () => {
               >
                 <span className="login-icon">🔐</span>
                 <span>Login</span>
-              </button>
+              </motion.button>
             )}
           </div>
 
@@ -388,6 +393,7 @@ const Navbar = () => {
           </motion.button>
         </div>
 
+        {/* Mobile Menu Overlay */}
         <AnimatePresence>
           {isMenuOpen && (
             <motion.div 
@@ -401,6 +407,7 @@ const Navbar = () => {
         </AnimatePresence>
       </motion.nav>
 
+      {/* Login Modal */}
       <LoginModal 
         isOpen={isLoginModalOpen} 
         onClose={closeLoginModal}
